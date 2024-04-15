@@ -1,36 +1,34 @@
 import { useMemo } from "react";
+import { useActivity } from "../hooks";
 import { CalorieDisplay } from "./CalorieDisplay";
-import { Activity } from "../interfaces/interfaces";
 
-interface Props {
-  activities: Activity[];
-}
+export const CalorieTracker = () => {
+  const { state } = useActivity();
 
-export const CalorieTracker = ({ activities }: Props) => {
-  // Contadores
+  // Contadores (opcionalmente puede trasladarse a activity context y pasarlo como valor[value])
   const caloriesConsumed = useMemo(
     () =>
-      activities.reduce(
+      state.activities.reduce(
         (total, activity) =>
           activity.category === 1 ? total + activity.calories : total,
         0
       ),
-    [activities]
+    [state.activities]
   );
 
   const caloriesBurned = useMemo(
     () =>
-      activities.reduce(
+      state.activities.reduce(
         (total, activity) =>
           activity.category === 2 ? total + activity.calories : total,
         0
       ),
-    [activities]
+    [state.activities]
   );
 
   const netCalories = useMemo(
     () => caloriesConsumed - caloriesBurned,
-    [activities]
+    [state.activities]
   );
 
   return (
